@@ -74,9 +74,18 @@ export default class PandocEditor {
       }, 10)
     }
 
+    // handle click events below editor
+    this._place = place;
+    this._onClickBelow = this.focus.bind(this);
+    this._place.addEventListener("click", this._onClickBelow);
+
   }
 
   destroy() {
+    if (this._onClickBelow) {
+      this._place.removeEventListener("click", this._onClickBelow);
+      this._onClickBelow = null;
+    }
     if (this._view) {
       this._view.destroy();
       this._view = null;
