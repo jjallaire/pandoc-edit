@@ -1,0 +1,44 @@
+.ProseMirror {
+  outline: none;
+  padding-left: 12px;
+  padding-right: 12px;
+  background-color: #fff;
+  width: 95%;
+}
+
+.ProseMirror p {
+  margin-bottom: 16px;
+}
+
+.ProseMirror pre code {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.ProseMirror hr {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.ProseMirror blockquote {
+  padding-left: 1em;
+  border-left: 3px solid #eee;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.ProseMirror li > p {
+  margin-bottom: 5px;
+}
+
+.ProseMirror li:last-of-type > p {
+  margin-bottom: 16px;
+}
+
+.ProseMirror img {
+  height: auto;
+}
