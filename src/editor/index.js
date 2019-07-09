@@ -14,6 +14,7 @@ import { pandocMarks } from './marks'
 import { pandocNodes } from './nodes'
 import { pandocInputRules } from './inputrules';
 import { buildKeymap } from './keymap'
+import { EditorCommand, buildCommands } from './commands' 
 
 import { imagePlugin } from "./image/plugin.js";
 
@@ -63,6 +64,33 @@ export default class PandocEditor {
       dispatchTransaction: this._dispatchTransaction.bind(this)
     });
 
+    // create editor commands
+    this._commands = buildCommands(this._schema, this._hooks);
+
+    // auto-focus if requested
+    if (this._options.autoFocus) {
+      setTimeout(() => {
+        this.focus()
+      }, 10)
+    }
+
+  }
+
+  destroy() {
+    if (this._view) {
+      this._view.destroy();
+      this._view = null;
+    }
+  }
+
+  // adapt editor commands to the generic (no arg) command interface, then
+  // return an object keyed by command name
+  get commands() {
+    let commands = this._commands.reduce((commands, command) => ({
+      ...commands,
+      [command.name]: new EditorCommandAdaptor(command, this)
+    }), {});
+    return commands;
   }
 
   getJSON() {
@@ -139,3 +167,28 @@ export default class PandocEditor {
   }
 
 }
+
+class EditorCommandAdaptor extends EditorCommand {
+      
+  constructor(command, editor) {
+    super(command.name, command.icon, command.text, command.title)
+    this._command = command;
+    this._editor = editor;
+  }
+
+  isEnabled() {
+    return this._command.isEnabled(this._editor._state);
+  }
+
+  isLatched() {
+    return this._command.isLatched(this._editor._state);
+  }
+
+  execute() {
+    let editor = this._editor;
+    editor._view.focus();
+    return this._command.execute(editor._state, editor._view.dispatch, editor._view);
+  }
+}
+
+
