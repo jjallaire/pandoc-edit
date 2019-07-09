@@ -11,7 +11,7 @@ export function pandocInputRules(schema) {
     orderedListRule(schema.nodes.ordered_list),
     bulletListRule(schema.nodes.bullet_list),
     codeBlockRule(schema.nodes.code_block),
-    headingRule(schema.nodes.heading)
+    headingRule(schema.nodes.heading, 6)
   ];
   return inputRules({rules})
 }
