@@ -19,5 +19,18 @@
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
+  },
+  "dependencies": {
+    "prosemirror-commands": "^1.0.8",
+    "prosemirror-dropcursor": "^1.1.1",
+    "prosemirror-gapcursor": "^1.0.4",
+    "prosemirror-history": "^1.0.4",
+    "prosemirror-inputrules": "^1.0.4",
+    "prosemirror-keymap": "^1.0.1",
+    "prosemirror-model": "^1.7.1",
+    "prosemirror-schema-basic": "^1.0.1",
+    "prosemirror-schema-list": "^1.0.3",
+    "prosemirror-state": "^1.2.3",
+    "prosemirror-view": "^1.9.11"
   }
 }

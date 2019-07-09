@@ -1,8 +1,12 @@
-function greet(guestName) {
-  console.log(`Hello ${guestName}!`);
-}
 
-console.log("[INFO2] Script loaded...")
+import PandocEditor from './editor'
 
-greet('Guest');
+
+let place = document.getElementById('pandoc-editor');
+
+let editor = new PandocEditor({
+  place
+});
+
+
 
