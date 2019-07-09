@@ -42,3 +42,7 @@
 .ProseMirror img {
   height: auto;
 }
+
+.ProseMirror .ProseMirror-selectednode {
+  outline: 2px solid #b3d4fc;
+}
