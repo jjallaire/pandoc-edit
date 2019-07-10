@@ -18,8 +18,11 @@ function editLink(attrs) {
           value: attrs && attrs.title
         })
       },
-      callback(result) {
-        resolve(result)
+      callback(link) {
+        resolve({
+          action: 'edit',
+          link: link
+        })
       }
     })
   });
@@ -35,8 +38,8 @@ function editImage(attrs) {
         title: new TextField({label: "Title", value: attrs && attrs.title}),
         alt: new TextField({label: "Description", value: attrs && attrs.alt})
       },
-      callback(result) {
-        resolve(result);
+      callback(image) {
+        resolve(image);
       }
     })
   });
