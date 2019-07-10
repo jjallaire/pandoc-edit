@@ -4,12 +4,12 @@ module.exports = {
     devtool: 'source-map',
     entry: './src/index.js',
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+      filename: 'bundle.js',
+      path: path.resolve(__dirname, 'dist')
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
-        port: 8080
+      contentBase: path.join(__dirname, 'example'),
+      port: 8080
     },
     module: {
       rules: [
