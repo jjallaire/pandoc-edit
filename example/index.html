@@ -5,6 +5,7 @@
   <title>Pandoc Editor</title>
   <link rel="stylesheet" type="text/css" href="styles.css">
   <script src="pandoc-editor.js"></script>
+  <script src="dialogs.js"></script>
 </head>
 <body>
   <h1>Pandoc Editor</h1>
@@ -43,6 +44,8 @@ If you'd like to quote someone, use the > character before the line:
         menuBar: true
       },
       hooks: {
+        onEditLink: editLink,
+        onEditImage: editImage,
         onUpdate() {
           output.innerHTML = editor.content;
         }

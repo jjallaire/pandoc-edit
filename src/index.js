@@ -40,8 +40,8 @@ export class Editor {
       isEditable: () => true,
       onUpdate: () => {},
       onSelectionChanged: () => {},
-      onEditLink: Promise.resolve(null),
-      onEditImage: Promise.resolve(null),
+      onEditLink: () => Promise.resolve(null),
+      onEditImage: () => Promise.resolve(null),
       ...hooks
     };
 
