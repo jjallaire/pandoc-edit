@@ -1,3 +1,11 @@
+#pandoc-editor {
+  margin-bottom: 20px;
+  width: 800px; 
+  height: 400px; 
+  border: 1px solid;
+  overflow-y: scroll;
+}
+
 .ProseMirror {
   outline: none;
   padding-left: 12px;
