@@ -15,6 +15,7 @@ import { buildKeymap } from './keymap'
 import { EditorCommand, buildCommands } from './commands' 
 
 import { imagePlugin } from "./plugins/image/";
+import { menuBarPlugin } from "./plugins/menu"
 
 export class Editor {
 
@@ -29,6 +30,7 @@ export class Editor {
      // options
      this._options = {
       autoFocus: false,
+      menuBar: false,
       mapKeys: {},
       ...options
     };
@@ -46,11 +48,13 @@ export class Editor {
     // set schema 
     this._schema = pandocSchema();
 
+    // create editor commands
+    this._commands = buildCommands(this._schema, this._hooks);
+
     // create the editor state
     this._state = EditorState.create({
       schema: this._schema,
       doc: pandocToDoc(content),
-      //doc: this._emptyDocument(),
       plugins: [...this._basePlugins(), ...plugins]
     })
 
@@ -59,9 +63,6 @@ export class Editor {
       state: this._state,
       dispatchTransaction: this._dispatchTransaction.bind(this)
     });
-
-    // create editor commands
-    this._commands = buildCommands(this._schema, this._hooks);
 
     // auto-focus if requested
     if (this._options.autoFocus) {
@@ -133,7 +134,7 @@ export class Editor {
 
 
   _basePlugins() {
-    return [
+    let plugins = [
       history(),
       pandocInputRules(this._schema),
       keymap(buildKeymap(this._schema, this._options.mapKeys)),
@@ -148,6 +149,12 @@ export class Editor {
       }),
       imagePlugin(this._schema.nodes.image, this._hooks.onEditImage)
     ];
+
+    if (this._options.menuBar) {
+      plugins.push(menuBarPlugin(this._commands));
+    }
+
+    return plugins;
   }
 
   _emptyDocument() {
@@ -206,8 +213,8 @@ class EditorCommandAdaptor extends EditorCommand {
     return this._command.isEnabled(this._editor._state);
   }
 
-  isLatched() {
-    return this._command.isLatched(this._editor._state);
+  isActive() {
+    return this._command.isActive(this._editor._state);
   }
 
   execute() {

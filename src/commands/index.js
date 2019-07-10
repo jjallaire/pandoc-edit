@@ -30,7 +30,7 @@ export class EditorCommand {
   }
 
   // eslint-disable-next-line
-  isLatched(state) {
+  isActive(state) {
     return false;
   }
 
@@ -64,7 +64,7 @@ class MarkCommand extends ProsemirrorCommand {
     this._attrs = attrs;
   }
 
-  isLatched(state) {
+  isActive(state) {
     return markIsActive(state, this._markType, this._attrs);
   }
 }
@@ -77,7 +77,7 @@ class NodeCommand extends ProsemirrorCommand {
     this._attrs = attrs;
   }
 
-  isLatched(state) {
+  isActive(state) {
     return nodeIsActive(state, this._nodeType, this._attrs);
   }
 
@@ -93,8 +93,8 @@ class ListCommand extends NodeCommand {
 
 class BlockCommand extends NodeCommand {
 
-  constructor(name, icon, text, title, blockType, toggleType, attrs = {}) {
-    super(name, icon, text, title, blockType, attrs, toggleBlockType(blockType, toggleType, attrs));
+  constructor(name, text, title, blockType, toggleType, attrs = {}) {
+    super(name, null, text, title, blockType, attrs, toggleBlockType(blockType, toggleType, attrs));
   }
 
 }
@@ -103,7 +103,6 @@ class HeadingCommand extends BlockCommand {
   constructor(schema, level) {
     super(
       "heading" + level,
-      null,
       null,
       "Heading " + level, 
       schema.nodes.heading, 
@@ -124,25 +123,23 @@ export function buildCommands(schema, hooks) {
   let commands = [
     new ProsemirrorCommand("undo", "undo", null, "Undo", undo),
     new ProsemirrorCommand("redo", "redo", null, "Redo", redo),
-    new MarkCommand("strong", "format_bold", null, "Bold", schema.marks.strong),
-    new MarkCommand("em", "format_italic", null, "Italics", schema.marks.em),
+    new MarkCommand("strong", "strong", null, "Bold", schema.marks.strong),
+    new MarkCommand("em", "em", null, "Italics", schema.marks.em),
     new MarkCommand("code", "code", null, "Code", schema.marks.code),
-    new MarkCommand("underline", "format_underlined", null, "Underline", schema.marks.underline),
-    new MarkCommand("strikethrough", "format_strikethrough", null,  "Strikethrough", schema.marks.strikethrough),
-    new ListCommand("bullet_list", "list", null, "Bullet List", schema, schema.nodes.bullet_list),
-    new ListCommand("ordered_list", "format_list_numbered", null, "Numbered List", schema, schema.nodes.ordered_list),
-    new WrapCommand("blockquote", "format_quote", null, "Blockquote", schema.nodes.blockquote, schema.nodes.paragraph),
-    new BlockCommand("paragraph", "subject", null, "Normal", schema.nodes.paragraph, schema.nodes.paragraph, {}),
-    new BlockCommand("code_block", "code", null, "Code", schema.nodes.code_block, schema.nodes.paragraph, {}),
+    new ListCommand("bullet_list", "bulletList", null, "Bullet List", schema, schema.nodes.bullet_list),
+    new ListCommand("ordered_list", "orderedList", null, "Numbered List", schema, schema.nodes.ordered_list),
+    new WrapCommand("blockquote", "blockquote", null, "Blockquote", schema.nodes.blockquote, schema.nodes.paragraph),
+    new BlockCommand("paragraph", null, "Normal", schema.nodes.paragraph, schema.nodes.paragraph, {}),
+    new BlockCommand("code_block", null, "Code", schema.nodes.code_block, schema.nodes.paragraph, {}),
     new HeadingCommand(schema, 1),
     new HeadingCommand(schema, 2),
     new HeadingCommand(schema, 3),
     new HeadingCommand(schema, 4),
     new ProsemirrorCommand("link", "link", null,  "Hyperlink", 
                            linkCommand(schema.marks.link, hooks.onEditLink)),
-    new ProsemirrorCommand("horizontal_rule", "remove", null, "Horizontal Rule", 
+    new ProsemirrorCommand("horizontal_rule", null, null, "Horizontal Rule", 
                            insertCommand(schema.nodes.horizontal_rule)),
-    new ProsemirrorCommand("image", "image", null, "Image", 
+    new ProsemirrorCommand("image", null, null, "Image", 
                            imageCommand(schema.nodes.image, hooks.onEditImage))
   ];
 

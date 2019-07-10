@@ -1,7 +1,12 @@
 
 
 let place = document.getElementById('pandoc-editor');
-let editor = new PandocEditor.Editor( { place });
+let editor = new PandocEditor.Editor({ 
+  place,  
+  options: {
+    menuBar: true
+  }
+});
 
 let content = "**here** we go _again_ And again and again";
 editor.setContent(content);
