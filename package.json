@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "WYSIWYM editor for pandoc",
   "private": true,
-  "main": "index.js",
   "scripts": {
     "build": "webpack --mode=development",
     "watch": "webpack --watch --mode=development",
@@ -30,6 +29,7 @@
     "prosemirror-history": "^1.0.4",
     "prosemirror-inputrules": "^1.0.4",
     "prosemirror-keymap": "^1.0.1",
+    "prosemirror-markdown": "^1.3.1",
     "prosemirror-model": "^1.7.1",
     "prosemirror-schema-basic": "^1.0.1",
     "prosemirror-schema-list": "^1.0.3",
