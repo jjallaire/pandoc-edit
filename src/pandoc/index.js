@@ -1,18 +1,33 @@
 
 
-import { Schema } from "prosemirror-model"
+//import { Schema } from "prosemirror-model"
 
 import { 
   schema, 
-  //defaultMarkdownParser, 
-  //defaultMarkdownSerializer
+  defaultMarkdownParser, 
+  defaultMarkdownSerializer
 } from "prosemirror-markdown"
 
-import { imageNode } from './nodes/image'
+//import { imageNode } from './nodes/image'
+
+
+// parse pandoc markdown into PM doc
+export function docFromPandoc(markdown) {
+  return defaultMarkdownParser.parse(markdown);
+}
+
+// get pandoc markdown from PM doc
+export function docToPandoc(doc) {
+  return defaultMarkdownSerializer.serialize(doc);
+}
+
 
 // schema
 export function pandocSchema() {
   
+  return schema;
+
+  /*
   // start with default schema
   let schemaSpec = schema.spec;
 
@@ -21,6 +36,7 @@ export function pandocSchema() {
 
   // return schema
   return new Schema(schemaSpec);
+  */
 }
 
 // input rules (transform > to blockquote, etc.)
