@@ -9,8 +9,22 @@
 <body>
   <h1>Pandoc Editor</h1>
   <div id="pandoc-editor" style="width: 800px; height: 500px; border: 1px solid;"></div>
-  <button id="pandoc-get-content">Get Content</button>
-  <pre><code id="pandoc-markdown"></code></pre>
-  <script src="editor.js"></script>
+  <pre><code id="pandoc-markdown-output"></code></pre>
+  <script>
+    let place = document.getElementById('pandoc-editor');
+    let output = document.getElementById('pandoc-markdown-output');
+    let editor = new PandocEditor.Editor({ 
+      place,  
+      content: "**here** we go _again_ And again and again",
+      options: {
+        menuBar: true
+      },
+      hooks: {
+        onUpdate() {
+          output.innerHTML = editor.content;
+        }
+      }
+    });
+  </script>
 </body>
 </html>

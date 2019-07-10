@@ -76,6 +76,9 @@ export class Editor {
     this._onClickBelow = this.focus.bind(this);
     this._place.addEventListener("click", this._onClickBelow);
 
+    // emit initial update
+    setTimeout(() => this._emitUpdate(), 0);
+
   }
 
   destroy() {
@@ -157,16 +160,6 @@ export class Editor {
     return plugins;
   }
 
-  _emptyDocument() {
-    const kEmptyDocument = {
-      type: 'doc',
-      content: [{
-        type: 'paragraph',
-      }],
-    };
-    return this._schema.nodeFromJSON(kEmptyDocument);
-  }
-
   _dispatchTransaction(transaction) {
     
     // apply the transaction
@@ -178,7 +171,7 @@ export class Editor {
    
     // notify listeners of updates
     if (transaction.docChanged) {
-      this._emitUpdate(transaction);
+      this._emitUpdate();
     }
   }
 
@@ -190,12 +183,9 @@ export class Editor {
     }
   }
 
-  _emitUpdate(transaction) {
+  _emitUpdate() {
     if (this._hooks.onUpdate) {
-      this._hooks.onUpdate({
-        time: transaction.time,
-        getJSON: this.getJSON.bind(this),
-      })
+      this._hooks.onUpdate()
     }
   }
 
