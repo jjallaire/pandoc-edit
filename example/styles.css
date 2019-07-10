@@ -1,7 +1,7 @@
 #pandoc-editor {
   margin-bottom: 20px;
   width: 800px; 
-  height: 400px; 
+  height: 600px; 
   border: 1px solid;
   overflow-y: scroll;
 }
