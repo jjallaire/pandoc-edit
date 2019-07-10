@@ -8,7 +8,7 @@ import {
   //defaultMarkdownSerializer
 } from "prosemirror-markdown"
 
-import { imageNode } from './nodes/image.js'
+import { imageNode } from './nodes/image'
 
 // schema
 export function pandocSchema() {

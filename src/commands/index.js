@@ -10,10 +10,10 @@ import toggleList from './toggle-list'
 import toggleBlockType from './toggle-blocktype'
 import toggleWrap from './toggle-wrap'
 
-import { linkCommand } from './link.js'
-import { imageCommand } from './image.js'
+import { linkCommand } from './link'
+import { imageCommand } from './image'
 
-import { insertCommand } from './insert.js'
+import { insertCommand } from './insert'
 
 export class EditorCommand {
 

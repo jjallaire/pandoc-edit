@@ -1,7 +1,7 @@
 
 import { Plugin, PluginKey } from "prosemirror-state"
 
-import { imageHandleDrop } from './drop.js'
+import { imageHandleDrop } from './drop'
 import { imageHandleDoubleClickOn } from './dblclick'
 
 export function imagePlugin(nodeType, onEditImage) {

@@ -3,9 +3,12 @@ const path = require('path');
 module.exports = {
     devtool: 'source-map',
     entry: './src/index.js',
+    // https://webpack.js.org/guides/author-libraries/
     output: {
-      filename: 'bundle.js',
-      path: path.resolve(__dirname, 'dist')
+      filename: 'pandoc-editor.js',
+      path: path.resolve(__dirname, 'dist'),
+      library: "PandocEditor",
+      libraryTarget: "var"
     },
     devServer: {
       contentBase: path.join(__dirname, 'example'),

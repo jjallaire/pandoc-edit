@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "WYSIWYM editor for pandoc",
   "private": true,
+  "module": "src/index.js",
   "scripts": {
     "build": "webpack --mode=development",
     "watch": "webpack --watch --mode=development",

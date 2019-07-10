@@ -1,6 +1,6 @@
 
 
-import { imageDialog } from './dialog.js'
+import { imageDialog } from './dialog'
 
 export function imageHandleDoubleClickOn(nodeType, onEditImage) {
 
