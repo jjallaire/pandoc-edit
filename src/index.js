@@ -9,7 +9,7 @@ import { baseKeymap } from "prosemirror-commands"
 import { dropCursor } from 'prosemirror-dropcursor'
 import { gapCursor } from 'prosemirror-gapcursor'
 
-import { pandocSchema, pandocInputRules, docFromPandoc, docToPandoc } from './pandoc/'
+import { pandocSchema, pandocInputRules, pandocToDoc, pandocFromDoc } from './pandoc/'
 
 import { buildKeymap } from './keymap'
 import { EditorCommand, buildCommands } from './commands' 
@@ -49,7 +49,7 @@ export class Editor {
     // create the editor state
     this._state = EditorState.create({
       schema: this._schema,
-      doc: docFromPandoc(content),
+      doc: pandocToDoc(content),
       //doc: this._emptyDocument(),
       plugins: [...this._basePlugins(), ...plugins]
     })
@@ -90,7 +90,7 @@ export class Editor {
 
   setContent(content, emitUpdate) {
 
-    let doc = docFromPandoc(content);
+    let doc = pandocToDoc(content);
 
     this._state = EditorState.create({
       schema: this._state.schema,
@@ -106,7 +106,7 @@ export class Editor {
   }
 
   get content() {
-    return docToPandoc(this._state.doc);
+    return pandocFromDoc(this._state.doc);
   }
 
   // adapt editor commands to the generic (no arg) command interface, then

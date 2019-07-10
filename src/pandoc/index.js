@@ -1,6 +1,10 @@
 
 
-//import { Schema } from "prosemirror-model"
+// We currently use the pandoc-markdown package to get a default 
+// implementation of commonmark markdown editing. What we will 
+// ultimately want to do though is use the Pandoc parser directly
+// (via the json respresetnation of the AST) and then map between
+// the AST and ProseMirror.
 
 import { 
   schema, 
@@ -8,35 +12,19 @@ import {
   defaultMarkdownSerializer
 } from "prosemirror-markdown"
 
-//import { imageNode } from './nodes/image'
-
-
 // parse pandoc markdown into PM doc
-export function docFromPandoc(markdown) {
+export function pandocToDoc(markdown) {
   return defaultMarkdownParser.parse(markdown);
 }
 
 // get pandoc markdown from PM doc
-export function docToPandoc(doc) {
+export function pandocFromDoc(doc) {
   return defaultMarkdownSerializer.serialize(doc);
 }
 
-
 // schema
 export function pandocSchema() {
-  
   return schema;
-
-  /*
-  // start with default schema
-  let schemaSpec = schema.spec;
-
-  // swap in our image node
-  schemaSpec.nodes = schemaSpec.nodes.update("image", imageNode);
-
-  // return schema
-  return new Schema(schemaSpec);
-  */
 }
 
 // input rules (transform > to blockquote, etc.)
