@@ -4,7 +4,7 @@ import { NodeSelection } from "prosemirror-state"
 
 import { canInsert } from '../utils.js'
 
-import { imageDialog } from './dialog.js'
+import { imageDialog } from '../plugins/image/dialog'
 
 export function imageCommand(nodeType, onEditImage) {
 

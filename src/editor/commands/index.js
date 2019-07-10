@@ -11,10 +11,9 @@ import toggleBlockType from './toggle-blocktype'
 import toggleWrap from './toggle-wrap'
 
 import { linkCommand } from './link.js'
+import { imageCommand } from './image.js'
+
 import { insertCommand } from './insert.js'
-
-import { imageCommand } from '../image/command.js'
-
 
 export class EditorCommand {
 

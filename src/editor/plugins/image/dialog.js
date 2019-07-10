@@ -1,7 +1,7 @@
 
 
 
-import { insertAndSelectNode } from '../utils'
+import { insertAndSelectNode } from '../../utils'
 
 export function imageDialog(node, nodeType, state, dispatch, onEditImage) {
 

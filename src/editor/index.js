@@ -1,14 +1,7 @@
 
 
-import { Schema } from "prosemirror-model"
 import { EditorState, Plugin, PluginKey, NodeSelection } from "prosemirror-state"
 import { EditorView } from "prosemirror-view"
-
-import { 
-  schema, 
-  //defaultMarkdownParser, 
-  //defaultMarkdownSerializer
-} from "prosemirror-markdown"
 
 import { history } from "prosemirror-history"
 import { keymap } from "prosemirror-keymap"
@@ -16,12 +9,12 @@ import { baseKeymap } from "prosemirror-commands"
 import { dropCursor } from 'prosemirror-dropcursor'
 import { gapCursor } from 'prosemirror-gapcursor'
 
-import { pandocInputRules } from './inputrules';
+import { pandocSchema, pandocInputRules } from './pandoc/'
+
 import { buildKeymap } from './keymap'
 import { EditorCommand, buildCommands } from './commands' 
 
-import { imageNode } from './image/node.js'
-import { imagePlugin } from "./image/plugin.js";
+import { imagePlugin } from "./plugins/image/";
 
 export default class PandocEditor {
 
@@ -49,10 +42,8 @@ export default class PandocEditor {
       ...hooks
     };
 
-    // set schema (swap in our own image node)
-    let spec = schema.spec;
-    spec.nodes = spec.nodes.update("image", imageNode);
-    this._schema = new Schema(spec);
+    // set schema 
+    this._schema = pandocSchema();
 
     // create the editor state
     this._state = EditorState.create({
