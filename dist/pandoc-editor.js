@@ -1,3 +1,4 @@
+var PandocEditor =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -27835,10 +27836,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./src/editor/commands/image.js":
-/*!**************************************!*\
-  !*** ./src/editor/commands/image.js ***!
-  \**************************************/
+/***/ "./src/commands/image.js":
+/*!*******************************!*\
+  !*** ./src/commands/image.js ***!
+  \*******************************/
 /*! exports provided: imageCommand */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27847,8 +27848,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageCommand", function() { return imageCommand; });
 /* harmony import */ var prosemirror_state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prosemirror-state */ "./node_modules/prosemirror-state/dist/index.js");
 /* harmony import */ var prosemirror_state__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_state__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils.js */ "./src/editor/utils.js");
-/* harmony import */ var _plugins_image_dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../plugins/image/dialog */ "./src/editor/plugins/image/dialog.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils.js */ "./src/utils.js");
+/* harmony import */ var _plugins_image_dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../plugins/image/dialog */ "./src/plugins/image/dialog.js");
 
 
 
@@ -27870,10 +27871,10 @@ function imageCommand(nodeType, onEditImage) {
 
 /***/ }),
 
-/***/ "./src/editor/commands/index.js":
-/*!**************************************!*\
-  !*** ./src/editor/commands/index.js ***!
-  \**************************************/
+/***/ "./src/commands/index.js":
+/*!*******************************!*\
+  !*** ./src/commands/index.js ***!
+  \*******************************/
 /*! exports provided: EditorCommand, buildCommands */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -27883,15 +27884,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildCommands", function() { return buildCommands; });
 /* harmony import */ var prosemirror_history__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prosemirror-history */ "./node_modules/prosemirror-history/dist/history.js");
 /* harmony import */ var prosemirror_history__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_history__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/editor/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 /* harmony import */ var prosemirror_commands__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prosemirror-commands */ "./node_modules/prosemirror-commands/dist/commands.js");
 /* harmony import */ var prosemirror_commands__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prosemirror_commands__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _toggle_list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./toggle-list */ "./src/editor/commands/toggle-list.js");
-/* harmony import */ var _toggle_blocktype__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./toggle-blocktype */ "./src/editor/commands/toggle-blocktype.js");
-/* harmony import */ var _toggle_wrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./toggle-wrap */ "./src/editor/commands/toggle-wrap.js");
-/* harmony import */ var _link_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./link.js */ "./src/editor/commands/link.js");
-/* harmony import */ var _image_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./image.js */ "./src/editor/commands/image.js");
-/* harmony import */ var _insert_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./insert.js */ "./src/editor/commands/insert.js");
+/* harmony import */ var _toggle_list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./toggle-list */ "./src/commands/toggle-list.js");
+/* harmony import */ var _toggle_blocktype__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./toggle-blocktype */ "./src/commands/toggle-blocktype.js");
+/* harmony import */ var _toggle_wrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./toggle-wrap */ "./src/commands/toggle-wrap.js");
+/* harmony import */ var _link__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./link */ "./src/commands/link.js");
+/* harmony import */ var _image__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./image */ "./src/commands/image.js");
+/* harmony import */ var _insert__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./insert */ "./src/commands/insert.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -28101,23 +28102,23 @@ function (_NodeCommand3) {
 }(NodeCommand);
 
 function buildCommands(schema, hooks) {
-  var commands = [new ProsemirrorCommand("undo", "undo", null, "Undo", prosemirror_history__WEBPACK_IMPORTED_MODULE_0__["undo"]), new ProsemirrorCommand("redo", "redo", null, "Redo", prosemirror_history__WEBPACK_IMPORTED_MODULE_0__["redo"]), new MarkCommand("strong", "format_bold", null, "Bold", schema.marks.strong), new MarkCommand("em", "format_italic", null, "Italics", schema.marks.em), new MarkCommand("code", "code", null, "Code", schema.marks.code), new MarkCommand("underline", "format_underlined", null, "Underline", schema.marks.underline), new MarkCommand("strikethrough", "format_strikethrough", null, "Strikethrough", schema.marks.strikethrough), new ListCommand("bullet_list", "list", null, "Bullet List", schema, schema.nodes.bullet_list), new ListCommand("ordered_list", "format_list_numbered", null, "Numbered List", schema, schema.nodes.ordered_list), new WrapCommand("blockquote", "format_quote", null, "Blockquote", schema.nodes.blockquote, schema.nodes.paragraph), new BlockCommand("paragraph", "subject", null, "Normal", schema.nodes.paragraph, schema.nodes.paragraph, {}), new BlockCommand("code_block", "code", null, "Code", schema.nodes.code_block, schema.nodes.paragraph, {}), new HeadingCommand(schema, 1), new HeadingCommand(schema, 2), new HeadingCommand(schema, 3), new HeadingCommand(schema, 4), new ProsemirrorCommand("link", "link", null, "Hyperlink", Object(_link_js__WEBPACK_IMPORTED_MODULE_6__["linkCommand"])(schema.marks.link, hooks.onEditLink)), new ProsemirrorCommand("horizontal_rule", "remove", null, "Horizontal Rule", Object(_insert_js__WEBPACK_IMPORTED_MODULE_8__["insertCommand"])(schema.nodes.horizontal_rule)), new ProsemirrorCommand("image", "image", null, "Image", Object(_image_js__WEBPACK_IMPORTED_MODULE_7__["imageCommand"])(schema.nodes.image, hooks.onEditImage))];
+  var commands = [new ProsemirrorCommand("undo", "undo", null, "Undo", prosemirror_history__WEBPACK_IMPORTED_MODULE_0__["undo"]), new ProsemirrorCommand("redo", "redo", null, "Redo", prosemirror_history__WEBPACK_IMPORTED_MODULE_0__["redo"]), new MarkCommand("strong", "format_bold", null, "Bold", schema.marks.strong), new MarkCommand("em", "format_italic", null, "Italics", schema.marks.em), new MarkCommand("code", "code", null, "Code", schema.marks.code), new MarkCommand("underline", "format_underlined", null, "Underline", schema.marks.underline), new MarkCommand("strikethrough", "format_strikethrough", null, "Strikethrough", schema.marks.strikethrough), new ListCommand("bullet_list", "list", null, "Bullet List", schema, schema.nodes.bullet_list), new ListCommand("ordered_list", "format_list_numbered", null, "Numbered List", schema, schema.nodes.ordered_list), new WrapCommand("blockquote", "format_quote", null, "Blockquote", schema.nodes.blockquote, schema.nodes.paragraph), new BlockCommand("paragraph", "subject", null, "Normal", schema.nodes.paragraph, schema.nodes.paragraph, {}), new BlockCommand("code_block", "code", null, "Code", schema.nodes.code_block, schema.nodes.paragraph, {}), new HeadingCommand(schema, 1), new HeadingCommand(schema, 2), new HeadingCommand(schema, 3), new HeadingCommand(schema, 4), new ProsemirrorCommand("link", "link", null, "Hyperlink", Object(_link__WEBPACK_IMPORTED_MODULE_6__["linkCommand"])(schema.marks.link, hooks.onEditLink)), new ProsemirrorCommand("horizontal_rule", "remove", null, "Horizontal Rule", Object(_insert__WEBPACK_IMPORTED_MODULE_8__["insertCommand"])(schema.nodes.horizontal_rule)), new ProsemirrorCommand("image", "image", null, "Image", Object(_image__WEBPACK_IMPORTED_MODULE_7__["imageCommand"])(schema.nodes.image, hooks.onEditImage))];
   return commands;
 }
 
 /***/ }),
 
-/***/ "./src/editor/commands/insert.js":
-/*!***************************************!*\
-  !*** ./src/editor/commands/insert.js ***!
-  \***************************************/
+/***/ "./src/commands/insert.js":
+/*!********************************!*\
+  !*** ./src/commands/insert.js ***!
+  \********************************/
 /*! exports provided: insertCommand */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "insertCommand", function() { return insertCommand; });
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/editor/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
 function insertCommand(nodeType) {
   var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -28130,17 +28131,17 @@ function insertCommand(nodeType) {
 
 /***/ }),
 
-/***/ "./src/editor/commands/link.js":
-/*!*************************************!*\
-  !*** ./src/editor/commands/link.js ***!
-  \*************************************/
+/***/ "./src/commands/link.js":
+/*!******************************!*\
+  !*** ./src/commands/link.js ***!
+  \******************************/
 /*! exports provided: linkCommand */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "linkCommand", function() { return linkCommand; });
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/editor/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
 function linkCommand(markType, onEditLink) {
   return function (state, dispatch, view) {
@@ -28186,10 +28187,10 @@ function linkCommand(markType, onEditLink) {
 
 /***/ }),
 
-/***/ "./src/editor/commands/toggle-blocktype.js":
-/*!*************************************************!*\
-  !*** ./src/editor/commands/toggle-blocktype.js ***!
-  \*************************************************/
+/***/ "./src/commands/toggle-blocktype.js":
+/*!******************************************!*\
+  !*** ./src/commands/toggle-blocktype.js ***!
+  \******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28197,7 +28198,7 @@ function linkCommand(markType, onEditLink) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prosemirror_commands__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prosemirror-commands */ "./node_modules/prosemirror-commands/dist/commands.js");
 /* harmony import */ var prosemirror_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_commands__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/editor/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
 
 /* harmony default export */ __webpack_exports__["default"] = (function (type, toggletype) {
@@ -28215,10 +28216,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/editor/commands/toggle-list.js":
-/*!********************************************!*\
-  !*** ./src/editor/commands/toggle-list.js ***!
-  \********************************************/
+/***/ "./src/commands/toggle-list.js":
+/*!*************************************!*\
+  !*** ./src/commands/toggle-list.js ***!
+  \*************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28274,10 +28275,10 @@ function isList(node, schema) {
 
 /***/ }),
 
-/***/ "./src/editor/commands/toggle-wrap.js":
-/*!********************************************!*\
-  !*** ./src/editor/commands/toggle-wrap.js ***!
-  \********************************************/
+/***/ "./src/commands/toggle-wrap.js":
+/*!*************************************!*\
+  !*** ./src/commands/toggle-wrap.js ***!
+  \*************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28285,7 +28286,7 @@ function isList(node, schema) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prosemirror_commands__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prosemirror-commands */ "./node_modules/prosemirror-commands/dist/commands.js");
 /* harmony import */ var prosemirror_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_commands__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/editor/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
 
 /* harmony default export */ __webpack_exports__["default"] = (function (type) {
@@ -28302,16 +28303,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/editor/index.js":
-/*!*****************************!*\
-  !*** ./src/editor/index.js ***!
-  \*****************************/
-/*! exports provided: default */
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! exports provided: Editor */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PandocEditor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Editor", function() { return Editor; });
 /* harmony import */ var prosemirror_state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prosemirror-state */ "./node_modules/prosemirror-state/dist/index.js");
 /* harmony import */ var prosemirror_state__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_state__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var prosemirror_view__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prosemirror-view */ "./node_modules/prosemirror-view/dist/index.js");
@@ -28326,10 +28327,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prosemirror_dropcursor__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(prosemirror_dropcursor__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var prosemirror_gapcursor__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! prosemirror-gapcursor */ "./node_modules/prosemirror-gapcursor/dist/index.js");
 /* harmony import */ var prosemirror_gapcursor__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(prosemirror_gapcursor__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _pandoc___WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pandoc/ */ "./src/editor/pandoc/index.js");
-/* harmony import */ var _keymap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./keymap */ "./src/editor/keymap.js");
-/* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./commands */ "./src/editor/commands/index.js");
-/* harmony import */ var _plugins_image___WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./plugins/image/ */ "./src/editor/plugins/image/index.js");
+/* harmony import */ var _pandoc___WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pandoc/ */ "./src/pandoc/index.js");
+/* harmony import */ var _keymap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./keymap */ "./src/keymap.js");
+/* harmony import */ var _commands__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./commands */ "./src/commands/index.js");
+/* harmony import */ var _plugins_image___WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./plugins/image/ */ "./src/plugins/image/index.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -28373,11 +28374,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-
-var PandocEditor =
+var Editor =
 /*#__PURE__*/
 function () {
-  function PandocEditor(_ref) {
+  function Editor(_ref) {
     var _this = this;
 
     var place = _ref.place,
@@ -28385,7 +28385,7 @@ function () {
         hooks = _ref.hooks,
         plugins = _ref.plugins;
 
-    _classCallCheck(this, PandocEditor);
+    _classCallCheck(this, Editor);
 
     // defaults
     options = options || {};
@@ -28435,7 +28435,7 @@ function () {
     this._place.addEventListener("click", this._onClickBelow);
   }
 
-  _createClass(PandocEditor, [{
+  _createClass(Editor, [{
     key: "destroy",
     value: function destroy() {
       if (this._onClickBelow) {
@@ -28536,10 +28536,8 @@ function () {
     }
   }]);
 
-  return PandocEditor;
+  return Editor;
 }();
-
-
 
 var EditorCommandAdaptor =
 /*#__PURE__*/
@@ -28583,10 +28581,10 @@ function (_EditorCommand) {
 
 /***/ }),
 
-/***/ "./src/editor/keymap.js":
-/*!******************************!*\
-  !*** ./src/editor/keymap.js ***!
-  \******************************/
+/***/ "./src/keymap.js":
+/*!***********************!*\
+  !*** ./src/keymap.js ***!
+  \***********************/
 /*! exports provided: buildKeymap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28720,10 +28718,10 @@ function buildKeymap(schema, mapKeys) {
 
 /***/ }),
 
-/***/ "./src/editor/pandoc/index.js":
-/*!************************************!*\
-  !*** ./src/editor/pandoc/index.js ***!
-  \************************************/
+/***/ "./src/pandoc/index.js":
+/*!*****************************!*\
+  !*** ./src/pandoc/index.js ***!
+  \*****************************/
 /*! exports provided: pandocSchema, pandocInputRules */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28734,8 +28732,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prosemirror_model__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_model__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var prosemirror_markdown__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prosemirror-markdown */ "./node_modules/prosemirror-markdown/dist/index.js");
 /* harmony import */ var prosemirror_markdown__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prosemirror_markdown__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _nodes_image_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./nodes/image.js */ "./src/editor/pandoc/nodes/image.js");
-/* harmony import */ var _inputrules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./inputrules */ "./src/editor/pandoc/inputrules.js");
+/* harmony import */ var _nodes_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./nodes/image */ "./src/pandoc/nodes/image.js");
+/* harmony import */ var _inputrules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./inputrules */ "./src/pandoc/inputrules.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pandocInputRules", function() { return _inputrules__WEBPACK_IMPORTED_MODULE_3__["default"]; });
 
 
@@ -28746,7 +28744,7 @@ function pandocSchema() {
   // start with default schema
   var schemaSpec = prosemirror_markdown__WEBPACK_IMPORTED_MODULE_1__["schema"].spec; // swap in our image node
 
-  schemaSpec.nodes = schemaSpec.nodes.update("image", _nodes_image_js__WEBPACK_IMPORTED_MODULE_2__["imageNode"]); // return schema
+  schemaSpec.nodes = schemaSpec.nodes.update("image", _nodes_image__WEBPACK_IMPORTED_MODULE_2__["imageNode"]); // return schema
 
   return new prosemirror_model__WEBPACK_IMPORTED_MODULE_0__["Schema"](schemaSpec);
 } // input rules (transform > to blockquote, etc.)
@@ -28755,10 +28753,10 @@ function pandocSchema() {
 
 /***/ }),
 
-/***/ "./src/editor/pandoc/inputrules.js":
-/*!*****************************************!*\
-  !*** ./src/editor/pandoc/inputrules.js ***!
-  \*****************************************/
+/***/ "./src/pandoc/inputrules.js":
+/*!**********************************!*\
+  !*** ./src/pandoc/inputrules.js ***!
+  \**********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28834,10 +28832,10 @@ function headingRule(nodeType, maxLevel) {
 
 /***/ }),
 
-/***/ "./src/editor/pandoc/nodes/image.js":
-/*!******************************************!*\
-  !*** ./src/editor/pandoc/nodes/image.js ***!
-  \******************************************/
+/***/ "./src/pandoc/nodes/image.js":
+/*!***********************************!*\
+  !*** ./src/pandoc/nodes/image.js ***!
+  \***********************************/
 /*! exports provided: imageNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28878,22 +28876,22 @@ var imageNode = {
 
 /***/ }),
 
-/***/ "./src/editor/plugins/image/dblclick.js":
-/*!**********************************************!*\
-  !*** ./src/editor/plugins/image/dblclick.js ***!
-  \**********************************************/
+/***/ "./src/plugins/image/dblclick.js":
+/*!***************************************!*\
+  !*** ./src/plugins/image/dblclick.js ***!
+  \***************************************/
 /*! exports provided: imageHandleDoubleClickOn */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageHandleDoubleClickOn", function() { return imageHandleDoubleClickOn; });
-/* harmony import */ var _dialog_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dialog.js */ "./src/editor/plugins/image/dialog.js");
+/* harmony import */ var _dialog__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dialog */ "./src/plugins/image/dialog.js");
 
 function imageHandleDoubleClickOn(nodeType, onEditImage) {
   return function (view, pos, node) {
     if (node.type === nodeType) {
-      Object(_dialog_js__WEBPACK_IMPORTED_MODULE_0__["imageDialog"])(node, nodeType, view.state, view.dispatch, onEditImage);
+      Object(_dialog__WEBPACK_IMPORTED_MODULE_0__["imageDialog"])(node, nodeType, view.state, view.dispatch, onEditImage);
       return true;
     } else {
       return false;
@@ -28903,17 +28901,17 @@ function imageHandleDoubleClickOn(nodeType, onEditImage) {
 
 /***/ }),
 
-/***/ "./src/editor/plugins/image/dialog.js":
-/*!********************************************!*\
-  !*** ./src/editor/plugins/image/dialog.js ***!
-  \********************************************/
+/***/ "./src/plugins/image/dialog.js":
+/*!*************************************!*\
+  !*** ./src/plugins/image/dialog.js ***!
+  \*************************************/
 /*! exports provided: imageDialog */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageDialog", function() { return imageDialog; });
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils */ "./src/editor/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils */ "./src/utils.js");
 
 function imageDialog(node, nodeType, state, dispatch, onEditImage) {
   // if we are being called with an existing node then read it's attributes 
@@ -28945,10 +28943,10 @@ function imageDialog(node, nodeType, state, dispatch, onEditImage) {
 
 /***/ }),
 
-/***/ "./src/editor/plugins/image/drop.js":
-/*!******************************************!*\
-  !*** ./src/editor/plugins/image/drop.js ***!
-  \******************************************/
+/***/ "./src/plugins/image/drop.js":
+/*!***********************************!*\
+  !*** ./src/plugins/image/drop.js ***!
+  \***********************************/
 /*! exports provided: imageHandleDrop */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28987,10 +28985,10 @@ function imageHandleDrop(nodeType) {
 
 /***/ }),
 
-/***/ "./src/editor/plugins/image/index.js":
-/*!*******************************************!*\
-  !*** ./src/editor/plugins/image/index.js ***!
-  \*******************************************/
+/***/ "./src/plugins/image/index.js":
+/*!************************************!*\
+  !*** ./src/plugins/image/index.js ***!
+  \************************************/
 /*! exports provided: imagePlugin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28999,8 +28997,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imagePlugin", function() { return imagePlugin; });
 /* harmony import */ var prosemirror_state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! prosemirror-state */ "./node_modules/prosemirror-state/dist/index.js");
 /* harmony import */ var prosemirror_state__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(prosemirror_state__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _drop_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./drop.js */ "./src/editor/plugins/image/drop.js");
-/* harmony import */ var _dblclick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dblclick */ "./src/editor/plugins/image/dblclick.js");
+/* harmony import */ var _drop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./drop */ "./src/plugins/image/drop.js");
+/* harmony import */ var _dblclick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dblclick */ "./src/plugins/image/dblclick.js");
 
 
 
@@ -29010,7 +29008,7 @@ function imagePlugin(nodeType, onEditImage) {
     props: {
       handleDoubleClickOn: Object(_dblclick__WEBPACK_IMPORTED_MODULE_2__["imageHandleDoubleClickOn"])(nodeType, onEditImage),
       handleDOMEvents: {
-        drop: Object(_drop_js__WEBPACK_IMPORTED_MODULE_1__["imageHandleDrop"])(nodeType)
+        drop: Object(_drop__WEBPACK_IMPORTED_MODULE_1__["imageHandleDrop"])(nodeType)
       }
     }
   });
@@ -29018,10 +29016,10 @@ function imagePlugin(nodeType, onEditImage) {
 
 /***/ }),
 
-/***/ "./src/editor/utils.js":
-/*!*****************************!*\
-  !*** ./src/editor/utils.js ***!
-  \*****************************/
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
 /*! exports provided: getMarkAttrs, getMarkRange, markIsActive, nodeIsActive, canInsert, insertAndSelectNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29158,25 +29156,7 @@ function insertAndSelectNode(node, state, dispatch) {
   dispatch(tr);
 }
 
-/***/ }),
-
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./editor */ "./src/editor/index.js");
-
-var place = document.getElementById('pandoc-editor');
-new _editor__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  place: place
-});
-
 /***/ })
 
 /******/ });
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=pandoc-editor.js.map
