@@ -1,5 +1,7 @@
 const path = require('path');
 const express = require('express');
+const child_process = require('child_process')
+
 
 module.exports = {
     devtool: 'source-map',
@@ -15,16 +17,48 @@ module.exports = {
       contentBase: path.join(__dirname, 'example'),
       port: 8080,
       before: function(app, server) {
-        
-        app.post('/pandoc/ast', express.json(), (request, response) => {
-          
-          let markdown = request.body.markdown;
-          response.json({ markdown });
-         
+
+        function pandoc({ from, to, input }) {
+          return new Promise(resolve => {
+            let spawn = child_process.spawn;
+            pandoc = spawn('pandoc', ['--from', from, '--to', to]);
+            pandoc.stdout.on('data', data => {
+              let ast = JSON.parse(data);
+              resolve(ast);
+            });
+            pandoc.stdin.setEncoding = 'utf-8';
+            pandoc.stdin.write(input);
+            pandoc.stdin.end();
+          })
+        }
+                
+        app.post('/pandoc/ast', express.json(), function(request, response) {
+          let spawn = child_process.spawn;
+          pandoc = spawn('pandoc', ['--from', request.body.format, '--to', 'json']);
+          pandoc.stdout.on('data', data => {
+            let ast = JSON.parse(data);
+            response.json( { ast });
+          });
+          pandoc.stderr.on('data', data => {
+            response.status(500).send(`${data}`);
+          })
+          pandoc.stdin.setEncoding = 'utf-8';
+          pandoc.stdin.write(request.body.markdown);
+          pandoc.stdin.end();
         });
-        app.post('/pandoc/markdown', express.json(), (request, response) => {
-          let ast = request.body.ast;
-          response.json({ ast })
+
+        app.post('/pandoc/markdown', express.json(), function(request, response) {
+          let spawn = child_process.spawn;
+          pandoc = spawn('pandoc', ['--from', 'json', '--to', request.body.format]);
+          pandoc.stdout.on('data', data => {
+            response.json( { markdown: `${data}` });
+          });
+          pandoc.stderr.on('data', data => {
+            response.status(500).send(`${data}`);
+          })
+          pandoc.stdin.setEncoding = 'utf-8';
+          pandoc.stdin.write(JSON.stringify(request.body.ast));
+          pandoc.stdin.end();
         })
       }
     },
@@ -44,3 +78,6 @@ module.exports = {
       ]
     }
 };
+
+
+
