@@ -12,6 +12,8 @@ import {
   defaultMarkdownSerializer
 } from "prosemirror-markdown"
 
+import axios from 'axios'
+
 
 // create initial empty document for editor
 export function pandocEmptyDoc() {
@@ -25,12 +27,18 @@ export function pandocEmptyDoc() {
 
 // parse pandoc markdown into PM doc
 export function pandocToDoc(markdown) {
-  return Promise.resolve(defaultMarkdownParser.parse(markdown));
+  return pandocMarkdown2Ast(markdown)
+    .then(() => {
+      return defaultMarkdownParser.parse(markdown);
+    })
 }
 
 // get pandoc markdown from PM doc
 export function pandocFromDoc(doc) {
-  return Promise.resolve(defaultMarkdownSerializer.serialize(doc));
+  return pandocAst2Markdown(doc)
+    .then(() => {
+      return defaultMarkdownSerializer.serialize(doc);
+    })
 }
 
 // schema
@@ -40,3 +48,18 @@ export function pandocSchema() {
 
 // input rules (transform > to blockquote, etc.)
 export { default as pandocInputRules } from './inputrules'
+
+
+function pandocMarkdown2Ast(markdown) {
+  return axios.post("/pandoc/ast", { markdown })
+    .then(result => {
+      console.log(result);
+    })
+}
+
+function pandocAst2Markdown(ast) {
+  return axios.post("/pandoc/markdown", { ast })
+    .then(result => {
+      console.log(result);
+    })
+}

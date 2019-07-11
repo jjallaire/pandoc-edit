@@ -1,4 +1,5 @@
 const path = require('path');
+const express = require('express');
 
 module.exports = {
     devtool: 'source-map',
@@ -12,7 +13,20 @@ module.exports = {
     },
     devServer: {
       contentBase: path.join(__dirname, 'example'),
-      port: 8080
+      port: 8080,
+      before: function(app, server) {
+        
+        app.post('/pandoc/ast', express.json(), (request, response) => {
+          
+          let markdown = request.body.markdown;
+          response.json({ markdown });
+         
+        });
+        app.post('/pandoc/markdown', express.json(), (request, response) => {
+          let ast = request.body.ast;
+          response.json({ ast })
+        })
+      }
     },
     module: {
       rules: [
