@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-import { schema } from "./markdown_schema"
+import { pandocSchema } from "./schema"
 
 import { Mark } from "prosemirror-model"
 
@@ -12,16 +12,34 @@ import { Mark } from "prosemirror-model"
 //  https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
 
 
-export function markdownToDoc(markdown) {
+export function pandocMarkdownToDoc(markdown) {
 
   return pandocMarkdown2Ast(markdown)
     .then(ast => {
 
       let nodes = ast.blocks.map(blockToNode);
-      return schema.node("doc", null, nodes);
+      return pandocSchema.node("doc", null, nodes);
     });
 
 }
+
+// call backend pandoc handler to convert markdown into 
+// a JSON version of the pandoc AST
+function pandocMarkdown2Ast(markdown) {
+  return axios.post("/pandoc/ast", { format: 'commonmark', markdown })
+    .then(result => {
+      return result.data.ast;
+    })
+}
+
+/*
+class PandocToDoc {
+
+
+
+}
+*/
+
 
 function blockToNode(block) {
   let typeName = null;
@@ -41,7 +59,7 @@ function blockToNode(block) {
   function addText(text) {
     if (!text) return;
     let last = content[content.length - 1];
-    let node = schema.text(text, marks), merged;
+    let node = pandocSchema.text(text, marks), merged;
     if (last && (merged = maybeMerge(last, node)))
       content[content.length - 1] = merged;
     else
@@ -54,14 +72,14 @@ function blockToNode(block) {
     else if (inline.t === "Space")
       addText(" ");
     else if (inline.t === "Strong") {
-      let markType = schema.marks["strong"];
+      let markType = pandocSchema.marks["strong"];
       let mark = markType.create();
       marks = mark.addToSet(marks);
       inline.c.forEach(addInline);
       marks = mark.removeFromSet(marks);
     }
     else if (inline.t === "Emph") {
-      let markType = schema.marks["em"];
+      let markType = pandocSchema.marks["em"];
       let mark = markType.create();
       marks = mark.addToSet(marks);
       inline.c.forEach(addInline);
@@ -69,7 +87,7 @@ function blockToNode(block) {
     } else if (inline.t === "Link") {
       let href = inline.c[2][0];
       let title = inline.c[2][1];
-      let markType = schema.marks["link"];
+      let markType = pandocSchema.marks["link"];
       let mark = markType.create({ href, title });
       marks = mark.addToSet(marks);
       inline.c[1].forEach(addInline);
@@ -79,7 +97,7 @@ function blockToNode(block) {
 
   block.c.forEach(addInline);
 
-  let node = schema.node(typeName, null, content);
+  let node = pandocSchema.node(typeName, null, content);
   return node;
 }
 
@@ -87,12 +105,6 @@ function blockToNode(block) {
 
 
 
-function pandocMarkdown2Ast(markdown) {
-  return axios.post("/pandoc/ast", { format: 'commonmark', markdown })
-    .then(result => {
-      return result.data.ast;
-    })
-}
 
 
 

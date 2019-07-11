@@ -3,10 +3,13 @@ import {inputRules, wrappingInputRule, textblockTypeInputRule,
   smartQuotes, emDash, ellipsis} from "prosemirror-inputrules"
 
 
+
+
+
 // : (Schema) → Plugin
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
-export default function(schema) {
+export function pandocInputRules(schema) {
   let rules = [
     ...smartQuotes,
     ellipsis,

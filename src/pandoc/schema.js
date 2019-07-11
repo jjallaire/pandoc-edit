@@ -1,7 +1,7 @@
-import {Schema} from "prosemirror-model"
+import { Schema } from "prosemirror-model"
 
-// ::Schema Document schema for the data model used by CommonMark.
-export const schema = new Schema({
+
+export const pandocSchema = new Schema({
   nodes: {
     doc: {
       content: "block+"
@@ -146,3 +146,12 @@ export const schema = new Schema({
     }
   }
 })
+
+export function pandocEmptyDoc() {
+  return pandocSchema.nodeFromJSON({
+    type: 'doc',
+    content: [{
+      type: 'paragraph',
+    }],
+  });
+}
