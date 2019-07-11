@@ -9,7 +9,7 @@ import { baseKeymap } from "prosemirror-commands"
 import { dropCursor } from 'prosemirror-dropcursor'
 import { gapCursor } from 'prosemirror-gapcursor'
 
-import { pandocSchema, pandocInputRules, pandocToDoc, pandocFromDoc } from './pandoc/'
+import { pandocSchema, pandocInputRules, pandocToDoc, pandocFromDoc, pandocEmptyDoc } from './pandoc/'
 
 import { buildKeymap } from './keymap'
 import { EditorCommand, buildCommands } from './commands' 
@@ -19,10 +19,9 @@ import { menuBarPlugin } from "./plugins/menu"
 
 export class Editor {
 
-  constructor({ place, content, options, hooks, plugins }) {
+  constructor({ place, options, hooks, plugins }) {
 
      // defaults
-     content = content || '';
      options = options || {};
      hooks = hooks || {};
      plugins = plugins || []; 
@@ -54,7 +53,7 @@ export class Editor {
     // create the editor state
     this._state = EditorState.create({
       schema: this._schema,
-      doc: pandocToDoc(content),
+      doc: pandocEmptyDoc(),
       plugins: [...this._basePlugins(), ...plugins]
     })
 
@@ -93,23 +92,22 @@ export class Editor {
   }
 
   setContent(content, emitUpdate) {
-
-    let doc = pandocToDoc(content);
-
-    this._state = EditorState.create({
-      schema: this._state.schema,
-      doc: doc,
-      plugins: this._state.plugins
-    })
-
-    this._view.updateState(this._state)
-
-    if (emitUpdate)
-      this._emitUpdate()
-
+    return pandocToDoc(content)
+      .then(doc => {
+        this._state = EditorState.create({
+          schema: this._state.schema,
+          doc: doc,
+          plugins: this._state.plugins
+        })
+    
+        this._view.updateState(this._state)
+    
+        if (emitUpdate)
+          this._emitUpdate()
+      });
   }
 
-  get content() {
+  getContent() {
     return pandocFromDoc(this._state.doc);
   }
 

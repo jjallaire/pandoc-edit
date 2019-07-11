@@ -12,14 +12,25 @@ import {
   defaultMarkdownSerializer
 } from "prosemirror-markdown"
 
+
+// create initial empty document for editor
+export function pandocEmptyDoc() {
+  return schema.nodeFromJSON({
+    type: 'doc',
+    content: [{
+      type: 'paragraph',
+    }],
+  });
+}
+
 // parse pandoc markdown into PM doc
 export function pandocToDoc(markdown) {
-  return defaultMarkdownParser.parse(markdown);
+  return Promise.resolve(defaultMarkdownParser.parse(markdown));
 }
 
 // get pandoc markdown from PM doc
 export function pandocFromDoc(doc) {
-  return defaultMarkdownSerializer.serialize(doc);
+  return Promise.resolve(defaultMarkdownSerializer.serialize(doc));
 }
 
 // schema

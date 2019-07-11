@@ -16,7 +16,19 @@
     let output = document.getElementById('pandoc-markdown-output');
     let editor = new PandocEditor.Editor({ 
       place,  
-      content: `
+      options: {
+        menuBar: true
+      },
+      hooks: {
+        onEditLink: editLink,
+        onEditImage: editImage,
+        onUpdate() {
+          editor.getContent().then(content => output.innerText = content);
+        }
+      }
+    });
+
+    let content = `
 It's very easy to make some words **bold** and other words *italic* with Markdown. 
 You can even [link to Google!](http://google.com).
 
@@ -39,18 +51,9 @@ If you'd like to quote someone, use the > character before the line:
 
 > Coffee. The finest organic suspension ever devised... I beat the Borg with it.
 > - Captain Janeway
-      `,
-      options: {
-        menuBar: true
-      },
-      hooks: {
-        onEditLink: editLink,
-        onEditImage: editImage,
-        onUpdate() {
-          output.innerHTML = editor.content;
-        }
-      }
-    });
+      `;
+    editor.setContent(content);
+
   </script>
 </body>
 </html>
