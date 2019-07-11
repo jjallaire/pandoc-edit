@@ -8,6 +8,9 @@ import { Mark } from "prosemirror-model"
 
 // pandoc schema:
 //  https://github.com/jgm/pandoc-types/blob/master/Text/Pandoc/Definition.hs#L94
+// pandoc markdown-it processor:
+//  https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
+
 
 export function markdownToDoc(markdown) {
 
