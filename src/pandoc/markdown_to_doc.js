@@ -43,13 +43,29 @@ let pandocTokenSpecs = {
   "BlockQuote": { block: "blockquote" },
   "CodeBlock": { block: "code_block", 
     getAttrs: tok => ({
-      // TODO: this doesn't seem to capture {} style params or multiple words
+      // TODO: this doesn't seem to capture {} style params 
       params: [].concat(...tok.c[0]).filter(param => !!param).join(' ')
     }),
     getText: tok => tok.c[1]
   },
   "HorizontalRule": { node: "horizontal_rule" },
   "LineBreak": { node: "hard_break" },
+  // TODO: in pandoc alt is allowed to include arbitrary markup,
+  // which we don't currently handle here
+  "Image": { node: "image", 
+    getAttrs: tok => ({
+      src: tok.c[2][0],
+      title: tok.c[2][1] || null,
+      alt: tok.c[1].map(elem => {
+        if (elem.t === "Str")
+          return elem.c;
+        else if (elem.t === "Space")
+          return " ";
+        else
+          return ""
+      }).join("")
+    })
+  },
   "Emph": { mark: "em" },
   "Strong": { mark: "strong" },
   "Link": { mark: "link", 
