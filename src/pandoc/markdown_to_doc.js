@@ -40,6 +40,11 @@ let pandocTokenSpecs = {
     getChildren: tok => tok.c[2]
   },
   "Para": { block: "paragraph" },
+  // TODO: do we need a special 'plain' type in the proesemirror schema?
+  // this is currently use within lists to indicate list items that are
+  // tightly packed together (i.e. don't have paragraphs). However, the 
+  // list_item in the schema currently requires paragraphs or blocks
+  "Plain": { block: "paragraph" },
   "BlockQuote": { block: "blockquote" },
   "CodeBlock": { block: "code_block", 
     getAttrs: tok => ({
@@ -50,6 +55,13 @@ let pandocTokenSpecs = {
   },
   "HorizontalRule": { node: "horizontal_rule" },
   "LineBreak": { node: "hard_break" },
+  "BulletList": { list: "bullet_list" },
+  "OrderedList": { list: "ordered_list",
+    getAttrs: tok => ({
+      order: tok.c[0],
+    }),
+    getChildren: tok => tok.c[1]
+  },
   // TODO: in pandoc alt is allowed to include arbitrary markup,
   // which we don't currently handle here
   "Image": { node: "image", 
@@ -105,7 +117,7 @@ class PandocParser {
     for (let type in tokenSpecs) {
       let spec = tokenSpecs[type];
       let getChildren = spec.getChildren || (tok => tok.c);
-      let getAttrs = spec.getAttrs || (() => {});
+      let getAttrs = spec.getAttrs || (() => ({}));
       if (spec.text) {
         handlers[type] = (state, tok) => {
           let text = spec.getText(tok);
@@ -136,6 +148,23 @@ class PandocParser {
         let nodeType = this._schema.nodeType(spec.node);
         handlers[type] = (state, tok) => {
           state.addNode(nodeType, getAttrs(tok));
+        }
+      } else if (spec.list) {
+        let nodeType = this._schema.nodeType(spec.list);
+        let listItemNodeType = this._schema.nodeType("list_item");
+        handlers[type] = (state, tok) => {
+          let children = getChildren(tok);
+          let tight = children.length && children[0][0].t === "Plain";
+          let attrs = getAttrs(tok);
+          if (tight)
+            attrs.tight = "true";
+          state.openNode(nodeType, attrs);
+          children.forEach(child => {
+            state.openNode(listItemNodeType, {});
+            this._parseTokens(state, child); 
+            state.closeNode();
+          });
+          state.closeNode();
         }
       }
     }
