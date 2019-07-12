@@ -33,7 +33,22 @@ function pandocAstToDoc(ast) {
 }
 
 let pandocTokenSpecs = {
+  "Header": { block: "heading", 
+    getAttrs: tok => ({
+      level: tok.c[0]
+    }),
+    getChildren: tok => tok.c[2]
+  },
   "Para": { block: "paragraph" },
+  "BlockQuote": { block: "blockquote" },
+  "CodeBlock": { block: "code_block", 
+    getAttrs: tok => ({
+      // TODO: this doesn't seem to capture {} style params or multiple words
+      params: [].concat(...tok.c[0]).filter(param => !!param).join(' ')
+    }),
+    getText: tok => tok.c[1]
+  },
+  "HorizontalRule": { node: "horizontal_rule" },
   "Emph": { mark: "em" },
   "Strong": { mark: "strong" },
   "Link": { mark: "link", 
@@ -43,8 +58,15 @@ let pandocTokenSpecs = {
     }),
     getChildren: tok => tok.c[1]
   },
-  "Str": { text: true, getText: tok => tok.c },
-  "Space": { text: true, getText: () => " "}
+  "Code": { mark: "code", 
+    getText: tok => tok.c[1]
+  },
+  "Str": { text: true, 
+    getText: tok => tok.c 
+  },
+  "Space": { text: true, 
+    getText: () => " "
+  }
 };
 
 class PandocParser {
@@ -83,16 +105,27 @@ class PandocParser {
           let markType = this._schema.marks[spec.mark];
           let mark = markType.create(getAttrs(tok));
           state.openMark(mark);
-          this._parseTokens(state, getChildren(tok));
+          if (spec.getText)
+            state.addText(spec.getText(tok))
+          else
+            this._parseTokens(state, getChildren(tok));
           state.closeMark(mark);
         } 
       } else if (spec.block) {
         let nodeType = this._schema.nodeType(spec.block);
         handlers[type] = (state, tok) => {
           state.openNode(nodeType, getAttrs(tok));
-          this._parseTokens(state, getChildren(tok));
+          if (spec.getText)
+            state.addText(spec.getText(tok))
+          else
+            this._parseTokens(state, getChildren(tok));
           state.closeNode();
         };
+      } else if (spec.node) {
+        let nodeType = this._schema.nodeType(spec.node);
+        handlers[type] = (state, tok) => {
+          state.addNode(nodeType, getAttrs(tok));
+        }
       }
     }
     return handlers;
@@ -125,16 +158,15 @@ class PandocParserState {
       nodes.push(node)
   }
 
-  // : (Mark)
-  // Adds the given mark to the set of active marks.
-  openMark(mark) {
-    this._marks = mark.addToSet(this._marks)
-  }
-
-  // : (Mark)
-  // Removes the given mark from the set of active marks.
-  closeMark(mark) {
-    this._marks = mark.removeFromSet(this._marks)
+  // : (NodeType, ?Object, ?[Node]) → ?Node
+  // Add a node at the current position.
+  addNode(type, attrs, content) {
+    let node = type.createAndFill(attrs, content, this._marks)
+    if (!node) 
+      return null
+    if (this._stack.length) 
+      this._top().content.push(node)
+    return node
   }
 
   // : (NodeType, ?Object)
@@ -149,23 +181,24 @@ class PandocParserState {
     if (this._marks.length) 
       this._marks = Mark.none
     let info = this._stack.pop()
-    return this._addNode(info.type, info.attrs, info.content)
+    return this.addNode(info.type, info.attrs, info.content)
+  }
+
+  // : (Mark)
+  // Adds the given mark to the set of active marks.
+  openMark(mark) {
+    this._marks = mark.addToSet(this._marks)
+  }
+
+  // : (Mark)
+  // Removes the given mark from the set of active marks.
+  closeMark(mark) {
+    this._marks = mark.removeFromSet(this._marks)
   }
 
 
   _top() {
     return this._stack[this._stack.length - 1]
-  }
-
-  // : (NodeType, ?Object, ?[Node]) → ?Node
-  // Add a node at the current position.
-  _addNode(type, attrs, content) {
-    let node = type.createAndFill(attrs, content, this._marks)
-    if (!node) 
-      return null
-    if (this._stack.length) 
-      this._top().content.push(node)
-    return node
   }
 
   _maybeMerge(a, b) {
