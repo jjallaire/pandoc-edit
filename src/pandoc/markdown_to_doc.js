@@ -49,6 +49,7 @@ let pandocTokenSpecs = {
     getText: tok => tok.c[1]
   },
   "HorizontalRule": { node: "horizontal_rule" },
+  "LineBreak": { node: "hard_break" },
   "Emph": { mark: "em" },
   "Strong": { mark: "strong" },
   "Link": { mark: "link", 
