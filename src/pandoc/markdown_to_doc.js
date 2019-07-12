@@ -56,14 +56,7 @@ let pandocTokenSpecs = {
     getAttrs: tok => ({
       src: tok.c[2][0],
       title: tok.c[2][1] || null,
-      alt: tok.c[1].map(elem => {
-        if (elem.t === "Str")
-          return elem.c;
-        else if (elem.t === "Space")
-          return " ";
-        else
-          return ""
-      }).join("")
+      alt: collectText(tok.c[1])
     })
   },
   "Emph": { mark: "em" },
@@ -85,6 +78,7 @@ let pandocTokenSpecs = {
     getText: () => " "
   }
 };
+
 
 class PandocParser {
 
@@ -224,5 +218,22 @@ class PandocParserState {
   }
 }
 
+
+// collect the text from a collection of pandoc ast
+// elements (ignores marks, useful for ast elements
+// that support marks but whose prosemirror equivalent
+// does not, e.g. image alt text)
+function collectText(c) {
+  return c.map(elem => {
+    if (elem.t === "Str")
+      return elem.c;
+    else if (elem.t === "Space")
+      return " ";
+    else if (elem.c)
+      return collectText(elem.c)
+    else
+      return ""
+  }).join("");
+}
 
 
