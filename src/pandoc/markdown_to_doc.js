@@ -11,14 +11,19 @@ import { Mark } from "prosemirror-model"
 // pandoc markdown-it processor:
 //  https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
 
+// TODO: more things dyanamic based on presence in schema
+// TODO: pass the schema through to handlers
+
 
 export function pandocMarkdownToDoc(markdown) {
 
   return pandocMarkdown2Ast(markdown)
     .then(ast => {
-
-      let nodes = ast.blocks.map(blockToNode);
-      return pandocSchema.node("doc", null, nodes);
+      let handlers = tokenHandlers(pandocSchema, tokenSpecs);
+      let state = new ConversionState(pandocSchema, handlers);
+      parseTokens(state, ast.blocks, handlers);
+      let doc = pandocSchema.node("doc", null, state.top().content);
+      return doc;
     });
 
 }
@@ -32,79 +37,138 @@ function pandocMarkdown2Ast(markdown) {
     })
 }
 
-/*
-class PandocToDoc {
+class ConversionState {
 
+  constructor(schema, tokenHandlers) {
+    // save references to schema and token handlers
+    this._schema = schema;
+    this._tokenHandlers = tokenHandlers;
 
+    // initialize state
+    this._stack = [{type: this._schema.topNodeType, content: []}]
+    this._marks = Mark.none    
+  }
 
-}
-*/
+  top() {
+    return this._stack[this._stack.length - 1]
+  }
 
+  push(elt) {
+    if (this._stack.length) 
+      this.top().content.push(elt)
+  }
 
-function blockToNode(block) {
-  let typeName = null;
-  if (block.t === "Para")
-    typeName = "paragraph";
-  else
-    throw new Error(`Unepxected block type: ${block.t}`);
+  // Adds the given text to the current position in the document,
+  // using the current marks as styling.
+  addText(text) {
+    if (!text) 
+      return
+    let nodes = this.top().content
+    let last = nodes[nodes.length - 1]
+    let node = this._schema.text(text, this._marks), merged
+    if (last && (merged = this.maybeMerge(last, node))) 
+      nodes[nodes.length - 1] = merged
+    else 
+      nodes.push(node)
+  }
 
-  let marks =  Mark.none;
-  let content = [];
-
-  function maybeMerge(a, b) {
+  maybeMerge(a, b) {
     if (a.isText && b.isText && Mark.sameSet(a.marks, b.marks))
       return a.withText(a.text + b.text)
   }
 
-  function addText(text) {
-    if (!text) return;
-    let last = content[content.length - 1];
-    let node = pandocSchema.text(text, marks), merged;
-    if (last && (merged = maybeMerge(last, node)))
-      content[content.length - 1] = merged;
-    else
-      content.push(node);
+  // : (Mark)
+  // Adds the given mark to the set of active marks.
+  openMark(mark) {
+    this._marks = mark.addToSet(this._marks)
   }
 
-  function addInline(inline) {
-    if (inline.t === "Str")
-      addText(inline.c);
-    else if (inline.t === "Space")
-      addText(" ");
-    else if (inline.t === "Strong") {
-      let markType = pandocSchema.marks["strong"];
-      let mark = markType.create();
-      marks = mark.addToSet(marks);
-      inline.c.forEach(addInline);
-      marks = mark.removeFromSet(marks);
-    }
-    else if (inline.t === "Emph") {
-      let markType = pandocSchema.marks["em"];
-      let mark = markType.create();
-      marks = mark.addToSet(marks);
-      inline.c.forEach(addInline);
-      marks = mark.removeFromSet(marks);
-    } else if (inline.t === "Link") {
-      let href = inline.c[2][0];
-      let title = inline.c[2][1];
-      let markType = pandocSchema.marks["link"];
-      let mark = markType.create({ href, title });
-      marks = mark.addToSet(marks);
-      inline.c[1].forEach(addInline);
-      marks = mark.removeFromSet(marks);
-    }
+  // : (Mark)
+  // Removes the given mark from the set of active marks.
+  closeMark(mark) {
+    this._marks = mark.removeFromSet(this._marks)
   }
 
-  block.c.forEach(addInline);
+  // : (NodeType, ?Object, ?[Node]) → ?Node
+  // Add a node at the current position.
+  addNode(type, attrs, content) {
+    let node = type.createAndFill(attrs, content, this._marks)
+    if (!node) 
+      return null
+    this.push(node)
+    return node
+  }
 
-  let node = pandocSchema.node(typeName, null, content);
-  return node;
+  // : (NodeType, ?Object)
+  // Wrap subsequent content in a node of the given type.
+  openNode(type, attrs) {
+    this._stack.push({type: type, attrs: attrs, content: []})
+  }
+
+  // : () → ?Node
+  // Close and return the node that is currently on top of the stack.
+  closeNode() {
+    if (this._marks.length) 
+      this._marks = Mark.none
+    let info = this._stack.pop()
+    return this.addNode(info.type, info.attrs, info.content)
+  }
+}
+
+function parseTokens(state, tokens, handlers) {
+  for (let tok of tokens) {
+    let handler = handlers[tok.t];
+    handler(state, tok);
+  }
 }
 
 
+function tokenHandlers(schema, tokenSpecs) {
 
+  let handlers = Object.create(null);
+  for (let type in tokenSpecs) {
+    let spec = tokenSpecs[type];
+    let getChildren = spec.getChildren || (tok => tok.c);
+    let getAttrs = spec.getAttrs || (() => {});
+    if (spec.text) {
+      handlers[type] = (state, tok) => {
+        let text = spec.getText(tok);
+        state.addText(text);
+      }
+    } else if (spec.mark) {
+      handlers[type] = (state, tok) => {
+        let markType = schema.marks[spec.mark];
+        let mark = markType.create(getAttrs(tok));
+        state.openMark(mark);
+        parseTokens(state, getChildren(tok), handlers);
+        state.closeMark(mark);
+      } 
+    } else if (spec.block) {
+      let nodeType = schema.nodeType(spec.block);
+      handlers[type] = (state, tok) => {
+        state.openNode(nodeType, getAttrs(tok));
+        parseTokens(state, getChildren(tok), handlers);
+        state.closeNode();
+      };
+    }
+  }
+  return handlers;
+}
 
+const tokenSpecs = {
 
-
+  "Para": { block: "paragraph" },
+  "Emph": { mark: "em" },
+  "Strong": { mark: "strong" },
+  "Link": { mark: "link", 
+    getAttrs: tok => ({
+      href: tok.c[2][0],
+      title: tok.c[2][1] || null
+    }),
+    getChildren: tok => tok.c[1]
+  },
+  "Str": { text: true, getText: tok => tok.c },
+  "Space": { text: true, getText: () => " "}
+};
 
 
