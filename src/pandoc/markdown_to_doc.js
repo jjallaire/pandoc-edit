@@ -19,11 +19,33 @@ export function pandocMarkdownToDoc(markdown) {
 
   return pandocMarkdown2Ast(markdown)
     .then(ast => {
-      let handlers = tokenHandlers(pandocSchema, tokenSpecs);
-      let state = new ConversionState(pandocSchema, handlers);
+      
+      // create handlers that map between pandoc AST and prosemirror doc
+      let handlers = tokenHandlers({
+        "Para": { block: "paragraph" },
+        "Emph": { mark: "em" },
+        "Strong": { mark: "strong" },
+        "Link": { mark: "link", 
+          getAttrs: tok => ({
+            href: tok.c[2][0],
+            title: tok.c[2][1] || null
+          }),
+          getChildren: tok => tok.c[1]
+        },
+        "Str": { text: true, getText: tok => tok.c },
+        "Space": { text: true, getText: () => " "}
+      });
+
+      // create object to track current state of conversion 
+      // (stack of block level nodes, active marks, etc.)
+      let state = new ConversionState(handlers);
+
+      
+
+
       parseTokens(state, ast.blocks, handlers);
-      let doc = pandocSchema.node("doc", null, state.top().content);
-      return doc;
+    
+      return state.topNode();
     });
 
 }
@@ -37,11 +59,20 @@ function pandocMarkdown2Ast(markdown) {
     })
 }
 
+function parseTokens(state, tokens, handlers) {
+  for (let tok of tokens) {
+    let handler = handlers[tok.t];
+    handler(state, tok);
+  }
+}
+
+
 class ConversionState {
 
-  constructor(schema, tokenHandlers) {
+  constructor(tokenHandlers) {
+
     // save references to schema and token handlers
-    this._schema = schema;
+    this._schema = pandocSchema;
     this._tokenHandlers = tokenHandlers;
 
     // initialize state
@@ -51,6 +82,10 @@ class ConversionState {
 
   top() {
     return this._stack[this._stack.length - 1]
+  }
+
+  topNode() {
+    return this.top().type.createAndFill(null, this.top().content);
   }
 
   push(elt) {
@@ -115,16 +150,8 @@ class ConversionState {
   }
 }
 
-function parseTokens(state, tokens, handlers) {
-  for (let tok of tokens) {
-    let handler = handlers[tok.t];
-    handler(state, tok);
-  }
-}
-
-
-function tokenHandlers(schema, tokenSpecs) {
-
+function tokenHandlers(tokenSpecs) {
+  let schema = pandocSchema;
   let handlers = Object.create(null);
   for (let type in tokenSpecs) {
     let spec = tokenSpecs[type];
@@ -154,21 +181,4 @@ function tokenHandlers(schema, tokenSpecs) {
   }
   return handlers;
 }
-
-const tokenSpecs = {
-
-  "Para": { block: "paragraph" },
-  "Emph": { mark: "em" },
-  "Strong": { mark: "strong" },
-  "Link": { mark: "link", 
-    getAttrs: tok => ({
-      href: tok.c[2][0],
-      title: tok.c[2][1] || null
-    }),
-    getChildren: tok => tok.c[1]
-  },
-  "Str": { text: true, getText: tok => tok.c },
-  "Space": { text: true, getText: () => " "}
-};
-
 
