@@ -32,6 +32,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.ProseMirror ul[data-tight] > li > p {
+  margin-block-start: 0.1em;
+}
+
 .ProseMirror blockquote {
   padding-left: 1em;
   border-left: 3px solid #eee;

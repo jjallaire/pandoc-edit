@@ -17,6 +17,7 @@ const TARGET_TITLE = 1;
 const HEADER_CHILDREN = 2;
 
 const CODE_BLOCK_ATTR = 0;
+const CODE_BLOCK_ATTR_PARAMS = 1;
 const CODE_BLOCK_TEXT = 1;
 
 const LIST_ORDER = 0;
@@ -38,16 +39,12 @@ export const pandocTokens = {
     getChildren: tok => tok.c[HEADER_CHILDREN]
   },
   "Para": { block: "paragraph" },
-  // TODO: do we need a special 'plain' type in the proesemirror schema?
-  // this is currently use within lists to indicate list items that are
-  // tightly packed together (i.e. don't have paragraphs). However, the 
-  // list_item in the schema currently requires paragraphs or blocks
   "Plain": { block: "paragraph" },
   "BlockQuote": { block: "blockquote" },
   "CodeBlock": { block: "code_block", 
     getAttrs: tok => ({
-      // TODO: this doesn't seem to capture {} style params 
-      params: [].concat(...tok.c[CODE_BLOCK_ATTR]).filter(param => !!param).join(' ')
+      // TODO: enhance for pandoc {} syntax
+      params: tok.c[CODE_BLOCK_ATTR][CODE_BLOCK_ATTR_PARAMS].join(' ')
     }),
     getText: tok => tok.c[CODE_BLOCK_TEXT]
   },
@@ -60,15 +57,13 @@ export const pandocTokens = {
     }),
     getChildren: tok => tok.c[LIST_CHILDREN]
   },
-  // TODO: in pandoc alt is allowed to include arbitrary markup,
-  // when there is text in the alt then a 'figure' is created
-  // rather than an image. 
   "Image": { node: "image", 
     getAttrs: tok => { 
       let target = tok.c[IMAGE_TARGET];
       return {
         src: target[TARGET_URL],
         title: target[TARGET_TITLE] || null,
+        // TODO: support for figures
         alt: collectText(tok.c[IMAGE_ALT])
       }
     }
