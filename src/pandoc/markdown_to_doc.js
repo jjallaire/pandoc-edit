@@ -58,7 +58,10 @@ class PandocParser {
   _parseTokens(state, tokens) {
     for (let tok of tokens) {
       let handler = this._handlers[tok.t];
-      handler(state, tok);
+      if (handler)
+        handler(state, tok);
+      else
+        console.warn(`no handler for pandoc token ${tok.t} (ignoring)`);
     }
   }
 
@@ -74,6 +77,8 @@ class PandocParser {
           state.addText(text);
         }
       } else if (spec.mark) {
+        if (!this._schema.marks[spec.mark])
+          continue;
         handlers[type] = (state, tok) => {
           let markType = this._schema.marks[spec.mark];
           let mark = markType.create(getAttrs(tok));
@@ -85,6 +90,8 @@ class PandocParser {
           state.closeMark(mark);
         } 
       } else if (spec.block) {
+        if (!this._schema.nodes[spec.block])
+          continue;
         let nodeType = this._schema.nodeType(spec.block);
         handlers[type] = (state, tok) => {
           state.openNode(nodeType, getAttrs(tok));
@@ -95,11 +102,15 @@ class PandocParser {
           state.closeNode();
         };
       } else if (spec.node) {
+        if (!this._schema.nodes[spec.node])
+          continue;
         let nodeType = this._schema.nodeType(spec.node);
         handlers[type] = (state, tok) => {
           state.addNode(nodeType, getAttrs(tok));
         }
       } else if (spec.list) {
+        if (!this._schema.nodes[spec.list])
+          continue;
         let nodeType = this._schema.nodeType(spec.list);
         let listItemNodeType = this._schema.nodeType("list_item");
         handlers[type] = (state, tok) => {

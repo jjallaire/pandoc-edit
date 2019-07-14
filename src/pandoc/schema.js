@@ -21,11 +21,13 @@ export const pandocSchema = new Schema({
       toDOM() { return ["blockquote", 0] }
     },
 
+    /*
     horizontal_rule: {
       group: "block",
       parseDOM: [{tag: "hr"}],
       toDOM() { return ["div", ["hr"]] }
     },
+    */
 
     heading: {
       attrs: {level: {default: 1}},

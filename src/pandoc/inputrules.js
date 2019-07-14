@@ -10,16 +10,24 @@ import {inputRules, wrappingInputRule, textblockTypeInputRule,
 // A set of input rules for creating the basic block quotes, lists,
 // code blocks, and heading.
 export function pandocInputRules(schema) {
+
   let rules = [
     ...smartQuotes,
     ellipsis,
-    emDash,
-    blockQuoteRule(schema.nodes.blockquote),
-    orderedListRule(schema.nodes.ordered_list),
-    bulletListRule(schema.nodes.bullet_list),
-    codeBlockRule(schema.nodes.code_block),
-    headingRule(schema.nodes.heading, 6)
+    emDash
   ];
+
+  const ifType = (type, f) => {
+    if (type)
+      rules.push(f(type));
+  }
+
+  ifType(schema.nodes.blockquote, blockQuoteRule);
+  ifType(schema.nodes.ordered_list, orderedListRule);
+  ifType(schema.nodes.bullet_list, bulletListRule);
+  ifType(schema.nodes.code_block, codeBlockRule);
+  ifType(schema.nodes.heading, type => headingRule(type, 6));
+
   return inputRules({rules})
 }
 
