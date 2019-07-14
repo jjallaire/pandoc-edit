@@ -9,17 +9,13 @@ import { Mark } from "prosemirror-model"
 
 // pandoc schema:
 //  https://github.com/jgm/pandoc-types/blob/master/Text/Pandoc/Definition.hs#L94
-// pandoc markdown-it processor:
-//  https://github.com/ProseMirror/prosemirror-markdown/blob/master/src/from_markdown.js
+
+// TOOD: error handling
 
 // TODO: parse and forward Attr for elements that support them (results in id, class,
 // and data-attribs in PM schema)
 
 // TODO: support pandoc {} syntax for fenced code regions
-
-// TOOD: error handling
-
-// TODO: more things dyanamic based on presence in schema
 
 // TODO: support for image figures (where alt text is displayed in a <p> below the image).
 // note that alt text supports arbitrary markup so need a structured way to allow 

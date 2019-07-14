@@ -58,7 +58,11 @@ This paragraph *combines **bold** and italics*.
 This paragraph has a [link to Google!](http://google.com).
       `;
 
-    editor.setContent(content);
+    editor.setContent(content)
+      .then(() => {})
+      .catch(error => {
+        window.alert(error.message);
+      })
 
   </script>
 </body>
