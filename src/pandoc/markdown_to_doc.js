@@ -3,6 +3,7 @@
 import axios from 'axios'
 
 import { pandocSchema } from "./schema"
+import { pandocTokens } from "./markdown_tokens"
 
 import { Mark } from "prosemirror-model"
 
@@ -28,69 +29,9 @@ function pandocMarkdownToAst(markdown) {
 }
 
 function pandocAstToDoc(ast) {
-  let parser = new PandocParser(pandocSchema, pandocTokenSpecs);
+  let parser = new PandocParser(pandocSchema, pandocTokens);
   return parser.parse(ast);
 }
-
-let pandocTokenSpecs = {
-  "Header": { block: "heading", 
-    getAttrs: tok => ({
-      level: tok.c[0]
-    }),
-    getChildren: tok => tok.c[2]
-  },
-  "Para": { block: "paragraph" },
-  // TODO: do we need a special 'plain' type in the proesemirror schema?
-  // this is currently use within lists to indicate list items that are
-  // tightly packed together (i.e. don't have paragraphs). However, the 
-  // list_item in the schema currently requires paragraphs or blocks
-  "Plain": { block: "paragraph" },
-  "BlockQuote": { block: "blockquote" },
-  "CodeBlock": { block: "code_block", 
-    getAttrs: tok => ({
-      // TODO: this doesn't seem to capture {} style params 
-      params: [].concat(...tok.c[0]).filter(param => !!param).join(' ')
-    }),
-    getText: tok => tok.c[1]
-  },
-  "HorizontalRule": { node: "horizontal_rule" },
-  "LineBreak": { node: "hard_break" },
-  "BulletList": { list: "bullet_list" },
-  "OrderedList": { list: "ordered_list",
-    getAttrs: tok => ({
-      order: tok.c[0],
-    }),
-    getChildren: tok => tok.c[1]
-  },
-  // TODO: in pandoc alt is allowed to include arbitrary markup,
-  // which we don't currently handle here
-  "Image": { node: "image", 
-    getAttrs: tok => ({
-      src: tok.c[2][0],
-      title: tok.c[2][1] || null,
-      alt: collectText(tok.c[1])
-    })
-  },
-  "Emph": { mark: "em" },
-  "Strong": { mark: "strong" },
-  "Link": { mark: "link", 
-    getAttrs: tok => ({
-      href: tok.c[2][0],
-      title: tok.c[2][1] || null
-    }),
-    getChildren: tok => tok.c[1]
-  },
-  "Code": { mark: "code", 
-    getText: tok => tok.c[1]
-  },
-  "Str": { text: true, 
-    getText: tok => tok.c 
-  },
-  "Space": { text: true, 
-    getText: () => " "
-  }
-};
-
 
 class PandocParser {
 
@@ -248,21 +189,5 @@ class PandocParserState {
 }
 
 
-// collect the text from a collection of pandoc ast
-// elements (ignores marks, useful for ast elements
-// that support marks but whose prosemirror equivalent
-// does not, e.g. image alt text)
-function collectText(c) {
-  return c.map(elem => {
-    if (elem.t === "Str")
-      return elem.c;
-    else if (elem.t === "Space")
-      return " ";
-    else if (elem.c)
-      return collectText(elem.c)
-    else
-      return ""
-  }).join("");
-}
 
 
