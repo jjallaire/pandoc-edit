@@ -55,6 +55,10 @@
   height: auto;
 }
 
+.ProseMirror span.raw-tex {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 .ProseMirror .ProseMirror-selectednode {
   outline: 2px solid #b3d4fc;
 }

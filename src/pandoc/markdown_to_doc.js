@@ -102,7 +102,10 @@ class PandocParser {
           continue;
         let nodeType = this._schema.nodeType(spec.node);
         handlers[type] = (state, tok) => {
-          state.addNode(nodeType, getAttrs(tok));
+          let content = null;
+          if (spec.getText)
+            content = this._schema.text(spec.getText(tok));
+          state.addNode(nodeType, getAttrs(tok), content);
         }
       } else if (spec.list) {
         if (!this._schema.nodes[spec.list])

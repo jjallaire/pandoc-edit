@@ -29,6 +29,9 @@ const LINK_TARGET = 2;
 
 const CODE_TEXT = 1;
 
+//const RAW_INLINE_TYPE = 0;
+const RAW_INLINE_TEXT = 1;
+
 export const pandocTokens = {
   "Header": { block: "heading", 
     getAttrs: tok => ({
@@ -86,6 +89,9 @@ export const pandocTokens = {
   },
   "Space": { text: true, 
     getText: () => " "
+  },
+  "RawInline": { node: "raw_tex",
+    getText: tok => tok.c[RAW_INLINE_TEXT]
   }
 };
 
