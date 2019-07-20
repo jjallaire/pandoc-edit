@@ -17,6 +17,11 @@ import { Mark } from "prosemirror-model"
 
 // TODO: support pandoc {} syntax for fenced code regions
 
+// TODO: see if setting the encoding on the pandoc stdout allows us to read it
+// as a string rather than as a buffer (generally investigate buffer handling)
+
+// TODO: handling metadata blocks
+
 // TODO: support for image figures (where alt text is displayed in a <p> below the image).
 // note that alt text supports arbitrary markup so need a structured way to allow 
 // selection and editing of just the alt text
