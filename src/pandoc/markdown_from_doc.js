@@ -117,7 +117,12 @@ const pandocMarkdownSerializer = new MarkdownSerializer({
   },
   text(state, node) {
     state.text(node.text)
-  }
+  },
+  raw_tex(state, node) {
+    let content = node.content.content;
+    if (content.length)
+      state.text(content[0].text, false)
+  },
 }, {
   em: {open: "*", close: "*", mixable: true, expelEnclosingWhitespace: true},
   strong: {open: "**", close: "**", mixable: true, expelEnclosingWhitespace: true},

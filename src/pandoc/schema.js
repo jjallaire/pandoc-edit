@@ -87,6 +87,15 @@ export const pandocSchema = new Schema({
       toDOM(node) { return node.text }
     },
 
+    raw_tex: {
+      inline: true,
+      content: "text*",
+      group: "inline",
+      marks: false,
+      toDOM() { return ["span", { class: 'raw-tex'}, 0] },
+      parseDOM: [{tag: "span[.raw-tex]"}]
+    },
+
     image: {
       inline: true,
       attrs: {

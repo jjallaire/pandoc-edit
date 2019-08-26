@@ -26,13 +26,15 @@ import { Mark } from "prosemirror-model"
 // note that alt text supports arbitrary markup so need a structured way to allow 
 // selection and editing of just the alt text
 
+// TODO: toggleMark from prosemirror shows commands enabled even when marks: false
+
 export function pandocMarkdownToDoc(markdown) {
   return pandocMarkdownToAst(markdown)
     .then(pandocAstToDoc);
 }
 
 function pandocMarkdownToAst(markdown) {
-  return axios.post("/pandoc/ast", { format: 'commonmark', markdown })
+  return axios.post("/pandoc/ast", { format: 'markdown', markdown })
     .then(result => {
       return result.data.ast;
     })
@@ -107,7 +109,10 @@ class PandocParser {
           continue;
         let nodeType = this._schema.nodeType(spec.node);
         handlers[type] = (state, tok) => {
-          state.addNode(nodeType, getAttrs(tok));
+          let content = null;
+          if (spec.getText)
+            content = this._schema.text(spec.getText(tok));
+          state.addNode(nodeType, getAttrs(tok), content);
         }
       } else if (spec.list) {
         if (!this._schema.nodes[spec.list])
