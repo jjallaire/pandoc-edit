@@ -24,7 +24,7 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "lodash": "^4.17.15",
     "prosemirror-commands": "^1.0.8",
     "prosemirror-dropcursor": "^1.1.1",
